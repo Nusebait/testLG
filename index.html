@@ -1,39 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>TEST AIRSERVER</title>
 
+<head>
+    <title>new app</title>
     <style type="text/css">
         body {
             width: 100%;
             height: 100%;
             background-color: #202020;
         }
+
         div {
             position: absolute;
             height: 100%;
             width: 100%;
             display: table;
         }
+
         h1 {
             display: table-cell;
             vertical-align: middle;
             text-align: center;
             color: #FFFFFF;
         }
-    </style>
 
+        /* Style for buttons */
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button:hover,
+        button:focus {
+            background-color: #45a049;
+            outline: none;
+        }
+
+        /* Style for focused button */
+        .focused {
+            border: 2px solid #FFD700;
+            outline: none;
+        }
+    </style>
 </head>
+
 <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
 <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
 <script type="text/javascript">
-    async function launchApp() {
+    // Function to launch an app based on app ID
+    async function launchApp(appId) {
         return new Promise((resolve, reject) => {
             webOS.service.request("luna://com.webos.applicationManager", {
                 method: "launch",
                 parameters: {
-                    id: "com.webos.app.livetv",  // Replace with the ID of the app you want to launch
-                    params: {"command": "start"}
+                    id: appId,
+                    params: { "command": "start" }
                 },
                 onSuccess: function (response) {
                     console.log("App launched successfully", response);
@@ -47,22 +79,71 @@
         });
     }
 
-    async function main() {
-        try {
-            await launchApp();
-            // Redirection removed
-        } catch (error) {
-            console.error("Error launching the app:", error);
-        }
+    // Specific functions for each button
+    function launchYouTube() {
+        launchApp("youtube.leanback.v4");
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        main();
+    function launchHDMI1() {
+        launchApp("com.webos.app.hdmi1");
+    }
+
+    function launchLiveTV() {
+        launchApp("com.webos.app.livetv");
+    }
+
+    // Function to manage remote control key presses
+    document.addEventListener('keydown', function (event) {
+        let focusedElement = document.querySelector('.focused');
+        let buttons = document.querySelectorAll('button');
+        let currentIndex = Array.prototype.indexOf.call(buttons, focusedElement);
+
+        switch (event.key) {
+            case 'ArrowUp':
+            case 'ArrowLeft':
+                // Move focus to the previous button
+                if (currentIndex > 0) {
+                    buttons[currentIndex].classList.remove('focused');
+                    buttons[currentIndex - 1].classList.add('focused');
+                    buttons[currentIndex - 1].focus();
+                }
+                break;
+            case 'ArrowDown':
+            case 'ArrowRight':
+                // Move focus to the next button
+                if (currentIndex < buttons.length - 1) {
+                    buttons[currentIndex].classList.remove('focused');
+                    buttons[currentIndex + 1].classList.add('focused');
+                    buttons[currentIndex + 1].focus();
+                }
+                break;
+            case 'Enter':
+            case 'OK':
+                // Trigger click on the focused button
+                if (focusedElement) {
+                    focusedElement.click();
+                }
+                break;
+        }
     });
+
+    // Initialize the first button as focused on page load
+    window.onload = function () {
+        let firstButton = document.querySelector('button');
+        firstButton.classList.add('focused');
+        firstButton.focus();
+    };
 </script>
+
 <body>
-    <div class="fullscreen-image">
-        <img src="lg.png" alt="Description de l'image">
+    <div>
+        <div class="buttons">
+            <!-- Buttons to trigger specific functions -->
+            <button tabindex="0" onclick="launchYouTube()">Lancer YouTube</button>
+            <button tabindex="0" onclick="launchHDMI1()">Passer à HDMI 1</button>
+            <button tabindex="0" onclick="launchLiveTV()">Lancer le Tuner TV</button>
+        </div>
     </div>
 </body>
+
 </html>
