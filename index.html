@@ -14,17 +14,16 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Récupération de l'élément de la zone de message
             const messageArea = document.getElementById("message-area");
 
-            // Fonction d'affichage de message
-            function displayMessage(msg, isSuccess) {
-                const p = document.createElement("p");
-                p.textContent = msg;
-                p.style.color = isSuccess ? "green" : "red";  // Couleur selon le succès ou l'échec
-                messageArea.appendChild(p);
+            // Vérification de l'initialisation
+            if (messageArea) {
+                messageArea.innerHTML = "<p>Script initialisé avec succès</p>";
+            } else {
+                console.error("L'élément message-area n'a pas été trouvé.");
             }
 
+            // Votre code de lancement idcap
             idcap.request("idcap://application/launch", {
                 parameters: {
                     id: "com.webos.app.commercial.airserver.guide",
@@ -33,12 +32,12 @@
                 onSuccess: function () {
                     const successMsg = "idcap://application/launch onSuccess";
                     console.log(successMsg);
-                    displayMessage(successMsg, true); // Affichage du message de succès
+                    messageArea.innerHTML += "<p style='color:green;'>" + successMsg + "</p>";
                 },
                 onFailure: function (err) {
                     const errorMsg = "onFailure : errorMessage = " + err.errorMessage;
                     console.log(errorMsg);
-                    displayMessage(errorMsg, false); // Affichage du message d'échec
+                    messageArea.innerHTML += "<p style='color:red;'>" + errorMsg + "</p>";
                 }
             });
         });
