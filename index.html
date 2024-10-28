@@ -28,7 +28,9 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             try {
-                idcap.request("idcap://application/launch", {
+ /*               idcap.request("idcap://application/launch", {*/
+                 webOS.service.request("luna://com.webos.applicationManager", { 
+                 method: "launch",
                     parameters: {
                         id: "com.webos.app.commercial.airserver.guide",
                         params: { command: "start" }
