@@ -43,13 +43,13 @@
         console.log("toto");
     })();
 
-    
+
 
 if (typeof webOS !== 'undefined' && webOS.service) {
     webOS.service.request("luna://com.webos.applicationManager", {
         method: "launch",
         parameters: {
-            id: "com.webos.app.commercial.airserver.launcher", // Remplacez par l'ID de l'application que vous souhaitez lancer
+            id: "com.webos.app.commercial.airserver.guide", // Remplacez par l'ID de l'application que vous souhaitez lancer
             params: { command: "start" }
         },
         onSuccess: function (response) {
