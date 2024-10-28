@@ -6,40 +6,43 @@
     <title>Exécution de l'application idcap</title>
     <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
+    <style>
+        #errorLog {
+            color: red;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Exécution de l'application idcap</h1>
-    <!-- Zone où les messages seront affichés -->
-    <div id="message-area"></div>
+    <h1>Application idcap</h1>
+    <div id="errorLog">Logs d'erreurs :</div>
 
     <script>
+        function displayError(message) {
+            // Trouver la div de log des erreurs
+            const errorLogDiv = document.getElementById("errorLog");
+            // Ajouter le message d'erreur dans cette div
+            errorLogDiv.innerHTML += "<p>" + message + "</p>";
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
-            const messageArea = document.getElementById("message-area");
-
-            // Vérification de l'initialisation
-            if (messageArea) {
-                messageArea.innerHTML = "<p>Script initialisé avec succès</p>";
-            } else {
-                console.error("L'élément message-area n'a pas été trouvé.");
+            try {
+                idcap.request("idcap://application/launch", {
+                    parameters: {
+                        id: "com.webos.app.commercial.airserver.guide",
+                        params: { command: "start" }
+                    },
+                    onSuccess: function () {
+                        displayError("idcap://application/launch onSuccess");
+                    },
+                    onFailure: function (err) {
+                        displayError("onFailure : errorMessage = " + err.errorMessage);
+                    }
+                });
+            } catch (error) {
+                displayError("Erreur : " + error.message);
             }
-
-            // Votre code de lancement idcap
-            idcap.request("idcap://application/launch", {
-                parameters: {
-                    id: "com.webos.app.commercial.airserver.guide",
-                    params: { command: "start" }
-                },
-                onSuccess: function () {
-                    const successMsg = "idcap://application/launch onSuccess";
-                    console.log(successMsg);
-                    messageArea.innerHTML += "<p style='color:green;'>" + successMsg + "</p>";
-                },
-                onFailure: function (err) {
-                    const errorMsg = "onFailure : errorMessage = " + err.errorMessage;
-                    console.log(errorMsg);
-                    messageArea.innerHTML += "<p style='color:red;'>" + errorMsg + "</p>";
-                }
-            });
         });
     </script>
 </body>
