@@ -1,69 +1,59 @@
-`<!DOCTYPE html>`  
-`<html>`  
-`<head>`  
-`<title>TEST AIRSERVER</title>`
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lancement d'application sur webOS</title>
+    <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
+    <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #log {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
 
-`<style type="text/css">`  
-`body {`  
-`width: 100%;`  
-`height: 100%;`  
-`background-color: #202020;`  
-`}`  
-`div {`  
-`position: absolute;`  
-`height: 100%;`  
-`width: 100%;`  
-`display: table;`  
-`}`  
-`h1 {`  
-`display: table-cell;`  
-`vertical-align: middle;`  
-`text-align: center;`  
-`color: #FFFFFF;`  
-`}`  
-`</style>`
+<h1>Lancement de l'application sur webOS</h1>
+<div id="log">Logs:</div>
 
-`</head>`
+<script>
+    // Fonction pour afficher les logs dans la div
+    function addLog(message) {
+        const logDiv = document.getElementById("log");
+        logDiv.innerHTML += "<p>" + message + "</p>";
+    }
 
-`<script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>`  
-`<script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>`  
-`<script type="text/javascript">`
+    // Exécution du code au chargement de la page
+    window.onload = function() {
+        // Vérifie si l'API idcap est chargée et disponible
+        if (typeof idcap !== "undefined" && typeof idcap.request === "function") {
+            idcap.request("idcap://application/launch", {
+                parameters: {
+                    id: "com.webos.app.commercial.airserver.launcher",
+                    params: { command: "start" }
+                },
+                onSuccess: function() {
+                    addLog("idcap://application/launch onSuccess");
+                },
+                onFailure: function(err) {
+                    addLog("onFailure : errorMessage = " + err.errorMessage);
+                }
+            });
+        } else {
+            addLog("Erreur : L'API idcap n'est pas disponible.");
+        }
+    };
+</script>
 
-`async function launchApp() {`  
-`return new Promise((resolve, reject) => {`  
-`idcap.request("idcap://application/launch", {`  
-`"parameters": {`  
-`"id": "com.webos.app.commercial.airserver.launcher",`  
-`"params": {"command": "start"},`  
-`},`  
-`"onSuccess": function () {`  
-`console.log("idcap://application/launch onSuccess");`  
-`},`  
-`"onFailure": function (err) {`  
-`console.log("onFailure : errorMessage = " + err.errorMessage);`  
-`}`  
-`});`  
-`});`  
-`}`
-
-`async function main() {`  
-`try {`  
-`await launchApp();`  
-`window.location.href = "https://www.lg.com/";`  
-`} catch (error) {`  
-`console.error("Error launching the app or redirecting:", error);`  
-`}`  
-`}`
-
-`document.addEventListener("DOMContentLoaded", function () {`  
-`main();`  
-`});`  
-`</script>`
-
-`<body>`  
-`<div class="fullscreen-image">`  
-`<img src="lg.png" alt="LG">`  
-`</div>`  
-`</body>`
-
-`</html>`
+</body>
+</html>
