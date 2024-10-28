@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launch Airserver</title>
+    <title>Launch AirServer</title>
     <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
+    <style>
+        /* Style pour centrer le bouton */
+        .center-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <h1>Launching AirServer</h1>
+    <div class="center-button">
+        <button id="launchButton">Lancer AirServer</button>
+    </div>
+
     <script>
-        window.onload = function () {
-
-            hcap.application.launchApplication({
-            "id": "youtube.leanback.v4",
-            "parameters": '{"command":"start"}',
-            "onSuccess": function () {
-            console.log("onSuccess");
-            },
-            "onFailure": function (f) {
-            console.log("onFailure : errorMessage = " + f.errorMessage);
-            }
-            });
-
-/*            idcap.request("idcap://application/launch", {
+        document.getElementById("launchButton").onclick = function () {
+            idcap.request("idcap://application/launch", {
                 parameters: {
                     id: "youtube.leanback.v4",
                     params: { command: "start" }
@@ -34,7 +40,7 @@
                 onFailure: function (err) {
                     console.error("onFailure : errorMessage = " + err.errorMessage);
                 }
-            });*/
+            });
         };
     </script>
 </body>
