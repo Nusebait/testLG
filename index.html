@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exécution de l'application idcap</title>
+    <title>Exécution de l'application webOS</title>
     <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
 </head>
@@ -22,16 +22,20 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             try {
-                idcap.request("idcap://application/launch", {
+                // Utilisation de webOS.service.request pour lancer l'application
+                webOS.service.request("luna://com.webos.applicationManager", {
+                    method: "launch",
                     parameters: {
-                        id: "com.webos.app.commercial.airserver.guide",
-                        params: { command: "start" }
+                        id: "com.webos.app.commercial.airserver.launcher", // ID de l'application à lancer
+                        params: { "command": "start" }
                     },
-                    onSuccess: function () {
-                        console.log("idcap://application/launch onSuccess");
+                    onSuccess: function (response) {
+                        console.log("App launched successfully", response);
                     },
-                    onFailure: function (err) {
-                        displayError("Échec : " + err.errorMessage);
+                    onFailure: function (error) {
+                        console.error("Failed to launch app", error);
+                        // Amélioration du message d'erreur affiché
+                        displayError("Échec : " + (error.errorText || "Erreur inconnue"));
                     }
                 });
             } catch (error) {
