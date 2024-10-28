@@ -43,22 +43,26 @@
         console.log("toto");
     })();
 
-    if (typeof idcap !== 'undefined') {
-        idcap.request("idcap://application/launch", {
-            "parameters": {
-                "id": "com.webos.app.commercial.airserver.launcher",
-                "params": {"command": "start"},
-            },
-            "onSuccess": function () {
-                console.log("idcap://application/launch onSuccess");
-            },
-            "onFailure": function (err) {
-                console.log("onFailure : errorMessage = " + err.errorMessage);
-            }
-        });
-    } else {
-        console.log("idcap n'est pas défini. Assurez-vous d'exécuter cela dans un environnement webOS.");
-    }
+    
+
+if (typeof webOS !== 'undefined' && webOS.service) {
+    webOS.service.request("luna://com.webos.applicationManager", {
+        method: "launch",
+        parameters: {
+            id: "com.webos.app.commercial.airserver.launcher", // Remplacez par l'ID de l'application que vous souhaitez lancer
+            params: { command: "start" }
+        },
+        onSuccess: function (response) {
+            console.log("luna://com.webos.applicationManager onSuccess", response);
+        },
+        onFailure: function (error) {
+            console.error("onFailure: errorMessage = " + error.errorMessage);
+        }
+    });
+} else {
+    console.log("webOS n'est pas défini. Assurez-vous d'exécuter cela dans un environnement webOS.");
+}
+
 </script>
 
 </body>
