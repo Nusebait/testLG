@@ -3,45 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exécution de l'application webOS</title>
+    <title>Console to Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #consoleOutput {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+    </style>
     <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
 </head>
 <body>
-    <div id="error-message" style="color: red;"></div> <!-- Zone d'affichage des erreurs -->
-    <script>
-        // Fonction pour afficher les erreurs dans le div "error-message"
-        function displayError(message) {
-            document.getElementById("error-message").textContent = message;
-        }
 
-        // Gestion des erreurs globales
-        window.addEventListener("error", function(event) {
-            displayError("Erreur : " + event.message);
-        });
+<h1>Console Output</h1>
+<div id="consoleOutput"></div>
 
-        document.addEventListener("DOMContentLoaded", function () {
-            try {
-                // Utilisation de webOS.service.request pour lancer l'application
-                webOS.service.request("luna://com.webos.applicationManager", {
-                    method: "launch",
-                    parameters: {
-                        id: "com.webos.app.commercial.airserver.launcher", // ID de l'application à lancer
-                        params: { "command": "start" }
-                    },
-                    onSuccess: function (response) {
-                        console.log("App launched successfully", response);
-                    },
-                    onFailure: function (error) {
-                        console.error("Failed to launch app", error);
-                        // Amélioration du message d'erreur affiché
-                        displayError("Échec : " + (error.errorText || "Erreur inconnue"));
-                    }
-                });
-            } catch (error) {
-                displayError("Exception : " + error.message);
+<script>
+    (function() {
+        const originalLog = console.log;
+        const outputDiv = document.getElementById('consoleOutput');
+
+        console.log = function(message) {
+            originalLog.apply(console, arguments);
+            const newMessage = document.createElement('div');
+            newMessage.textContent = message;
+            outputDiv.appendChild(newMessage);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+
+        console.log("toto");
+        console.log("toto");
+        console.log("toto");
+    })();
+
+    if (typeof idcap !== 'undefined') {
+        idcap.request("idcap://application/launch", {
+            "parameters": {
+                "id": "com.webos.app.commercial.airserver.launcher",
+                "params": {"command": "start"},
+            },
+            "onSuccess": function () {
+                console.log("idcap://application/launch onSuccess");
+            },
+            "onFailure": function (err) {
+                console.log("onFailure : errorMessage = " + err.errorMessage);
             }
         });
-    </script>
+    } else {
+        console.log("idcap n'est pas défini. Assurez-vous d'exécuter cela dans un environnement webOS.");
+    }
+</script>
+
 </body>
 </html>
