@@ -3,69 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exécution du Code</title>
+    <title>Lancer Application WebOS</title>
+    <!-- Inclusion des bibliothèques WebOS -->
     <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column; /* Modifié pour afficher les éléments en colonne */
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        #message {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px; /* Ajout d'un espace entre le message et les logs */
-        }
-        #console-messages {
-            white-space: pre-wrap; /* Permet de conserver les retours à la ligne */
-            font-family: monospace; /* Utilise une police monospaced pour les logs */
-            color: #666; /* Couleur différente pour les messages de log */
-        }
-    </style>
 </head>
 <body>
-
-<div id="message">Chargement...</div>
-<div id="console-messages"></div> <!-- Message de log séparé -->
-
-<script>
-    // Fonction pour afficher les messages de la console sur la page
-    function logToPage(message) {
-        const consoleMessages = document.getElementById("console-messages");
-        consoleMessages.innerText += message + "\n"; // Ajoute le message avec un retour à la ligne
-    }
-
-    window.onload = function() {
-        // Vérification de l'existence de idcap
-        if (typeof idcap === 'undefined') {
-            logToPage("Erreur : idcap n'est pas défini.");
-            return;
-        }
-
-        idcap.request("idcap://application/launch", {
-            "parameters": {
-                "id": "com.webos.app.commercial.airserver.launcher",
-                "params": {"command": "start"},
-            },
-            "onSuccess": function () {
-                const successMessage = "idcap://application/launch onSuccess";
-                logToPage(successMessage);
-                document.getElementById("message").innerText = "Succès ! L'application a été lancée.";
-            },
-            "onFailure": function (err) {
-                const errorMessage = "onFailure : errorMessage = " + err.errorMessage;
-                logToPage(errorMessage);
-                document.getElementById("message").innerText = "Échec ! " + err.errorMessage;
-            }
-        });
-    };
-</script>
-
+    <h1>Lancement de l'application AirServer</h1>
+    <script>
+        // Fonction qui s'exécute au démarrage pour lancer l'application
+        window.onload = function () {
+            idcap.request("idcap://application/launch", {
+                parameters: {
+                    id: "com.webos.app.commercial.airserver.launcher",
+                    params: { command: "start" }
+                },
+                onSuccess: function () {
+                    console.log("idcap://application/launch onSuccess");
+                },
+                onFailure: function (err) {
+                    console.error("onFailure : errorMessage = " + err.errorMessage);
+                }
+            });
+        };
+    </script>
 </body>
 </html>
