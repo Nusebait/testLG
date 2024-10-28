@@ -3,57 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lancement d'application sur webOS</title>
+    <title>Exécution de l'application idcap</title>
     <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        #log {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-            font-size: 14px;
-            color: #333;
-        }
-    </style>
 </head>
 <body>
-
-<h1>Lancement de l'application sur webOS</h1>
-<div id="log">Logs:</div>
-
-<script>
-    // Fonction pour afficher les logs dans la div
-    function addLog(message) {
-        const logDiv = document.getElementById("log");
-        logDiv.innerHTML += "<p>" + message + "</p>";
-    }
-
-    // Exécution du code au chargement de la page
-    window.onload = function() {
-        // Vérifie si l'API idcap est chargée et disponible
-        if (typeof idcap !== "undefined" && typeof idcap.request === "function") {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
             idcap.request("idcap://application/launch", {
                 parameters: {
                     id: "com.webos.app.commercial.airserver.launcher",
                     params: { command: "start" }
                 },
-                onSuccess: function() {
-                    addLog("idcap://application/launch onSuccess");
+                onSuccess: function () {
+                    console.log("idcap://application/launch onSuccess");
                 },
-                onFailure: function(err) {
-                    addLog("onFailure : errorMessage = " + err.errorMessage);
+                onFailure: function (err) {
+                    console.log("onFailure : errorMessage = " + err.errorMessage);
                 }
             });
-        } else {
-            addLog("Erreur : L'API idcap n'est pas disponible.");
-        }
-    };
-</script>
-
+        });
+    </script>
 </body>
 </html>
