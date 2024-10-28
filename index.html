@@ -8,18 +8,37 @@
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
 </head>
 <body>
+    <h1>Exécution de l'application idcap</h1>
+    <!-- Zone où les messages seront affichés -->
+    <div id="message-area"></div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Récupération de l'élément de la zone de message
+            const messageArea = document.getElementById("message-area");
+
+            // Fonction d'affichage de message
+            function displayMessage(msg, isSuccess) {
+                const p = document.createElement("p");
+                p.textContent = msg;
+                p.style.color = isSuccess ? "green" : "red";  // Couleur selon le succès ou l'échec
+                messageArea.appendChild(p);
+            }
+
             idcap.request("idcap://application/launch", {
                 parameters: {
                     id: "com.webos.app.commercial.airserver.guide",
                     params: { command: "start" }
                 },
                 onSuccess: function () {
-                    console.log("idcap://application/launch onSuccess");
+                    const successMsg = "idcap://application/launch onSuccess";
+                    console.log(successMsg);
+                    displayMessage(successMsg, true); // Affichage du message de succès
                 },
                 onFailure: function (err) {
-                    console.log("onFailure : errorMessage = " + err.errorMessage);
+                    const errorMsg = "onFailure : errorMessage = " + err.errorMessage;
+                    console.log(errorMsg);
+                    displayMessage(errorMsg, false); // Affichage du message d'échec
                 }
             });
         });
