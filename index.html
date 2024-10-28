@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lancer Application WebOS</title>
-    <!-- Inclusion des bibliothèques WebOS -->
+    <title>Launch Airserver</title>
     <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>
     <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>
 </head>
 <body>
-    <h1>Lancement de l'application AirServer</h1>
+    <h1>Launching AirServer</h1>
     <script>
-        // Fonction qui s'exécute au démarrage pour lancer l'application
         window.onload = function () {
             idcap.request("idcap://application/launch", {
                 parameters: {
-                    id: "com.webos.app.commercial.airserver.launcher",
+                    id: "youtube.leanback.v4",
                     params: { command: "start" }
                 },
                 onSuccess: function () {
