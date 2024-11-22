@@ -1,66 +1,125 @@
-<!DOCTYPE html>  
-<html lang="fr">  
-<head>  
+<!DOCTYPE html>
+<html lang="fr">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEST AIRSERVER</title>
+    <title>TVcast</title>
+    <script src="./js/idcap.js"></script>
 
-    <style>  
-        body {  
-            width: 100%;  
-            height: 100%;  
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
             margin: 0;
-            background-color: #202020;  
-        }  
-        .fullscreen-image {  
-            position: absolute;  
-            height: 100%;  
-            width: 100%;  
-            display: flex;  
-            align-items: center;  
-            justify-content: center;  
-        }  
-        img {  
-            max-width: 100%;  
-            max-height: 100%;  
-        }  
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            width: 200px;
+            height: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #ddd;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        button:focus {
+            border-color: #007BFF;
+            background-color: #cce5ff;
+        }
     </style>
-</head>  
+</head>
+<body>
+    <div class="button-container">
+        <button id="button1" tabindex="1" onclick="handleButton1()">Youtube</button>
+        <button id="button2" tabindex="2" onclick="handleButton2()">TV</button>
+        <button id="button3" tabindex="3" onclick="handleButton3()">Web</button>
+        <button id="button4" tabindex="4" onclick="handleButton4()">Reload</button>
+        <div id="videoChannelLG" style="background-image: url(tv:); height: 218px; left: 100px; position: absolute; top: 350px; width: 379px;"></div>
+    </div>
 
-<body>  
-    <script src="webOSTVjs-1.2.11/webOSTV.js" charset="utf-8"></script>  
-    <script src="webOSTVjs-1.2.11/webOSTV-dev.js" charset="utf-8"></script>  
-    <script>  
-        async function launchApp() {  
-            return new Promise((resolve, reject) => {  
-                webOS.service.request("luna://com.webos.applicationManager", {  
-                    method: "launch",  
-                    parameters: {  
-                        id: "com.webos.app.commercial.airserver.launcher",  
-                        params: {"command": "start"}  
-                    },  
-                    onSuccess: function (response) {  
-                        console.log("App launched successfully", response);  
-                        resolve(response);  
-                    },  
-                    onFailure: function (error) {  
-                        console.error("Failed to launch app", error);  
-                        reject(error);  
-                    }  
-                });  
-            });  
+    <script>
+        // Ajouter un événement pour s'assurer que le premier bouton est toujours focus par défaut
+        window.onload = () => {
+            document.getElementById('button1').focus();
+        };
+
+        // Naviguer avec le clavier pour simuler la navigation par télécommande
+        document.addEventListener('keydown', (event) => {
+            const focusableButtons = Array.from(document.querySelectorAll('button'));
+            const currentIndex = focusableButtons.findIndex(button => button === document.activeElement);
+
+            if (event.key === 'ArrowDown') {
+                // Aller au bouton suivant
+                const nextIndex = (currentIndex + 1) % focusableButtons.length;
+                focusableButtons[nextIndex].focus();
+            } else if (event.key === 'ArrowUp') {
+                // Aller au bouton précédent
+                const prevIndex = (currentIndex - 1 + focusableButtons.length) % focusableButtons.length;
+                focusableButtons[prevIndex].focus();
+            }
+        });
+
+        // Définition des fonctions associées à chaque bouton
+        function handleButton1() {
+            console.log("Bouton 1 pressé");
+            idcap.request( "idcap://application/launch" , {
+                "parameters" : {
+                    "id" : "youtube.leanback.v4",
+                    "noSplash" : true
+                },
+                "onSuccess": function () {
+                    console.log("idcap://application/launch onSuccess");
+                },
+                "onFailure": function (err) {
+                    console.log("onFailure : errorMessage = " + err.errorMessage);
+                }
+            });        }
+
+        function handleButton2() {
+            console.log("Bouton 1 pressé");
+            idcap.request( "idcap://application/launch" , {
+                "parameters" : {
+                    "id" : "com.webos.app.livetv",
+                    "noSplash" : false
+                },
+                "onSuccess": function () {
+                    console.log("idcap://application/launch onSuccess");
+                },
+                "onFailure": function (err) {
+                    console.log("onFailure : errorMessage = " + err.errorMessage);
+                }
+            });        }
+
+        function handleButton3() {
+            console.log("Bouton 3 pressé");
+            // Ouvrir une nouvelle page
+            window.open("https://comminter.com", "_blank", "width=800,height=600,scrollbars=yes");
         }
 
-        async function main() {  
-            try {  
-                await launchApp();  
-                window.location.href = "https://display-testing.tvcast.fr/preview?advertisingId=203&facilityId=0&orientation=horizontal";  
-            } catch (error) {  
-                console.error("Error launching the app or redirecting:", error);  
-            }  
+        function handleButton4() {
+            console.log("Bouton 4 pressé");
+            idcap.request( "idcap://procentric/application/launch" , {
+                "parameters" : { },
+                "onSuccess": function () {
+                    console.log("idcap://procentric/application/launch onSuccess");
+                },
+                "onFailure": function (err) {
+                    console.log("onFailure : errorMessage = " + err.errorMessage);
+                }
+            });
         }
-
-        document.addEventListener("DOMContentLoaded", main);  
-    </script>  
-</body>  
+    </script>
+</body>
 </html>
